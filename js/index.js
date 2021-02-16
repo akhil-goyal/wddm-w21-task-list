@@ -1,6 +1,6 @@
-import {getJsonData} from './fetch.js'
+import {getJsonData, addNewTask} from './fetch.js'
 import TaskList from './TaskList.js'
-
+import NewTask from './NewTask.js'
 
 
 // ONLY when the interface is loaded, do we go and look for data and render
@@ -8,17 +8,38 @@ window.addEventListener(`load`, (event) => {
 
   // Go get some data! (Assume some "await" time)
   const todoList = getJsonData(`http://whatever.com/tasks`)
+  const $app = document.getElementById(`app`)
+
+
 
   // Pass the array of data, build the UI
-
-  // document.getElementById(`app`).innerHTML = `<task-list></task-list>`
-
   const theListElement = new TaskList(todoList)
-  document.getElementById(`app`).appendChild(theListElement)
+  
+
+  
+  
+  // THe "<new-task>" form
+  const theNewTaskForm = new NewTask()
+  $app.appendChild(theNewTaskForm)
+  theNewTaskForm.addEventListener(`new`, (event) => {
+    console.log(`New task has been added!!!`, event.detail)
+    // Now what?
+    // - Update the database
+    // - Get a new listing of tasks
+    // - Refresh the UI to match the tasks
+    //theListElement.addNewTask(event.detail)
+    let updatedTaskList = addNewTask(event.detail)
+    console.table(updatedTaskList)
+
+    // "Render" the new list
+    theListElement.render(updatedTaskList)
+
+  })
 
 
-  // Prototype adding a new item to the list
-  theListElement.addNewTask(`Class complete!`)
+  $app.appendChild(theListElement)
+
+  
 })
 
 
@@ -34,9 +55,7 @@ window.addEventListener(`load`, (event) => {
 
 /*
 // LAB:
-
 Modify the way that a TaskList adds <task-item> elements, using the `new TaskItem()` style syntax to pass an task object (or the properties separately) to the class definition.
-
 Class will resume at 2:20
 */
 
@@ -65,7 +84,6 @@ Class will resume at 2:20
 
 /*
 - Order by priority and completeness
-
 Reminder:
 - Compare then() to async/await
 - Destructuring
