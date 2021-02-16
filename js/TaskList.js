@@ -18,7 +18,7 @@ export default class TaskList extends HTMLElement {
   constructor(todoList) {
     super()
 
-    this.root = this.attachShadow({mode: `open`})
+    this.root = this.attachShadow({ mode: `open` })
 
     const eleStyle = document.createElement(`style`)
     const txtStyle = document.createTextNode(`
@@ -29,20 +29,49 @@ export default class TaskList extends HTMLElement {
     eleStyle.appendChild(txtStyle)
     this.root.appendChild(eleStyle)
 
+    const userForm = document.createElement('form');
+
+    userForm.setAttribute('name', 'newTask');
+
+    const userInput = document.createElement('input');
+
+    userInput.setAttribute('type', 'text');
+    userInput.setAttribute('name', 'taskname');
+
+    const buttonSubmit = document.createElement('button');
+    buttonSubmit.setAttribute('type', 'submit');
+    buttonSubmit.innerHTML = 'Add';
+
+    buttonSubmit.addEventListener('click', event => {
+      const aTask = new TaskItem({ id: 4, task: userInput.value, complete: false })
+      aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
+      this.list.appendChild(aTask)
+      // this.list.addNewTask(userInput.value);
+      // debugger;
+      // console.log('List : ', this.list);
+      event.preventDefault();
+    })
+
+    userForm.appendChild(userInput);
+    userForm.appendChild(buttonSubmit);
+
+
     // Build an empty list
     this.list = document.createElement(`ul`)
 
-/*    // Add all of the <task-item> elements to the empty list
-    const loadTaskView = ({id, complete, task}) => {
-      return `<task-item data-id="${id}" data-complete="${complete}" data-task="${task}"></task-item>`
-    }
-    eleList.innerHTML = todoList.map(loadTaskView).join(`\n`)
-*/
+    /*    // Add all of the <task-item> elements to the empty list
+        const loadTaskView = ({id, complete, task}) => {
+          return `<task-item data-id="${id}" data-complete="${complete}" data-task="${task}"></task-item>`
+        }
+        eleList.innerHTML = todoList.map(loadTaskView).join(`\n`)
+    */
     todoList.forEach((item) => {
       const aTask = new TaskItem(item)
-      aTask.addEventListener('taskChanged', event => {console.log('Task Complete?', aTask.complete)})
+      aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
       this.list.appendChild(aTask)
     })
+
+    this.root.appendChild(userForm);
 
     this.root.appendChild(this.list)
 
@@ -50,8 +79,8 @@ export default class TaskList extends HTMLElement {
 
   addNewTask(name) {
     // Figure out what the next available id is
-    const aTask = new TaskItem({id:4, task:name, complete:false})
-    aTask.addEventListener('taskChanged', event => {console.log('Task Complete?', aTask.complete)})
+    const aTask = new TaskItem({ id: 4, task: name, complete: false })
+    aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
     this.list.appendChild(aTask)
   }
 
