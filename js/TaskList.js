@@ -43,12 +43,7 @@ export default class TaskList extends HTMLElement {
     buttonSubmit.innerHTML = 'Add';
 
     buttonSubmit.addEventListener('click', event => {
-      const aTask = new TaskItem({ id: 4, task: userInput.value, complete: false })
-      aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
-      this.list.appendChild(aTask)
-      // this.list.addNewTask(userInput.value);
-      // debugger;
-      // console.log('List : ', this.list);
+      this.addTaskTop(userInput.value);
       event.preventDefault();
     })
 
@@ -82,6 +77,12 @@ export default class TaskList extends HTMLElement {
     const aTask = new TaskItem({ id: 4, task: name, complete: false })
     aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
     this.list.appendChild(aTask)
+  }
+
+  addTaskTop(name) {
+    const aTask = new TaskItem({ id: 4, task: name, complete: false })
+    aTask.addEventListener('taskChanged', event => { console.log('Task Complete?', aTask.complete) })
+    this.list.insertBefore(aTask, this.list.childNodes[0]);
   }
 
 }
